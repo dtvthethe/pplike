@@ -5,6 +5,9 @@ services:
       dockerfile: docker/php/local/Dockerfile
     working_dir: /var/www/html
     container_name: pplike-php
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - pplike-network
     volumes:
@@ -36,6 +39,33 @@ services:
       - ./docker/nginx/local/default.conf:/etc/nginx/conf.d/default.conf:ro
     ports:
       - "8000:80"
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: pplike-postgres
+    networks:
+      - pplike-network
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-pplike}
+      POSTGRES_USER: ${DB_USERNAME:-pplike}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-pplike}
+    volumes:
+      # Giữ dữ liệu khi container được tạo lại.
+      - postgres_data:/var/lib/postgresql/data
+      # Tạo database riêng cho PHPUnit khi PostgreSQL khởi tạo lần đầu.
+      - ./docker/postgres/local/init.sql:/docker-entrypoint-initdb.d/01-testing.sql:ro
+    ports:
+      # Chỉ mở trên máy host để kết nối bằng các công cụ quản lý database.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  postgres_data:
 
 networks:
   pplike-network:
