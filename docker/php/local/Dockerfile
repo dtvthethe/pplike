@@ -2,14 +2,14 @@ FROM php:8.3-fpm-alpine
 
 RUN apk add --no-cache \
         oniguruma \
-        sqlite-libs \
+        libpq \
         unzip \
     && apk add --no-cache --virtual .build-deps \
         oniguruma-dev \
-        sqlite-dev \
+        postgresql-dev \
     && docker-php-ext-install -j"$(nproc)" \
         mbstring \
-        pdo_sqlite \
+        pdo_pgsql \
     && apk del .build-deps
 
 # lấy file `composer` từ image `composer:2` rồi copy vào image này, tại path `/usr/bin/composer`
