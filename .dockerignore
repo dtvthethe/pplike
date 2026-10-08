@@ -1,0 +1,11 @@
+# file này chỉ áp dụng khi build image, không ảnh hưởng đến khi tạo container.
+.git
+.env
+.env.*
+!.env.example
+node_modules
+vendor
+public/build
+storage/logs/*.log
+.phpunit.cache
+.phpunit.result.cache
