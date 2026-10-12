@@ -1,0 +1,4 @@
+interface:
+  display_name: "Get Spec"
+  short_description: "Tra mã endpoint để tạo spec RealWorld và response"
+  default_prompt: "Dùng $get-spec US_002 để tra endpoint và tạo tài liệu spec tương ứng."
