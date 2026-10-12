@@ -1,0 +1,10 @@
+```json
+{
+  "profile": {
+    "username": "jake",
+    "bio": "I work at statefarm",
+    "image": "https://api.realworld.io/images/smiley-cyrus.jpg",
+    "following": false
+  }
+}
+```
